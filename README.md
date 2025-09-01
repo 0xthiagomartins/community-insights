@@ -60,11 +60,11 @@ This project solves the crypto community monitoring challenge by **automating me
 ### **High-Level System Design**
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    AMBIENTE PYTHON ÚNICO                    │
+│                    SINGLE PYTHON ENVIRONMENT                │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐    ┌─────────────────────────────────┐ │
-│  │   SERVIÇO 1     │    │           SERVIÇO 2             │ │
-│  │  COLETA AUTO    │    │      PROCESSAMENTO IA           │ │
+│  │   SERVICE 1     │    │           SERVICE 2             │ │
+│  │  ORACLE EYE     │    │      NEURAL CORE                │ │
 │  │                 │    │                                 │ │
 │  │ • Telethon      │    │ • CrewAI                        │ │
 │  │ • Scheduler     │    │ • Cost Estimation               │ │
