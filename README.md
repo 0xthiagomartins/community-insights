@@ -218,16 +218,42 @@ crypto-insights/
 
 ## 🧪 **Testing**
 
-### **Run Tests**
+### **Testing Oracle Eye**
 ```bash
+# Activate Oracle Eye environment
+cd oracle-eye
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install test dependencies
 pip install pytest pytest-asyncio
 
-# Run all tests
+# Run tests
 pytest tests/
+```
 
-# Run with coverage
-pytest --cov=src tests/
+### **Testing Neural Core**
+```bash
+# Activate Neural Core environment
+cd neural-core
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install test dependencies
+pip install pytest pytest-asyncio
+
+# Run tests
+pytest tests/
+```
+
+### **Integration Testing**
+```bash
+# Test both services with shared database
+# 1. Start Oracle Eye in one terminal
+cd oracle-eye
+python src/main.py
+
+# 2. Test Neural Core in another terminal
+cd neural-core
+python -m cli.main setup-project --name "Test" --group "test_group"
 ```
 
 ---

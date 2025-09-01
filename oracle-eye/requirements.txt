@@ -1,0 +1,5 @@
+telethon
+sqlmodel
+sqlalchemy
+python-dotenv
+asyncio

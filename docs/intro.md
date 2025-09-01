@@ -6,17 +6,34 @@
 
 **Problem:** Crypto communities generate hundreds of messages per day. It's impossible to keep up manually, missing opportunities and staying out of the loop.
 
-**Solution:** Automatic message collection + AI for intelligent summaries + transparent cost control.
+**Solution:** Two independent services - automatic message collection (Oracle Eye) + AI processing (Neural Core) - communicating via shared database.
 
 ---
 
 ## What it does
 
-1. **Automatic collection** of messages from public Telegram groups
-2. **Intelligent processing** via CrewAI to identify what's important
-3. **Structured summaries** in easy-to-read format
-4. **Cost control** before processing
-5. **Simple interface** via command line
+1. **Oracle Eye Service**: Automatically collects messages from public Telegram groups
+2. **Neural Core Service**: Processes data via CrewAI to identify what's important
+3. **Shared Database**: Enables loose coupling between services
+4. **Structured Output**: Easy-to-read summaries in markdown format
+5. **Cost Control**: Transparent cost estimation before processing
+6. **Simple Interface**: Command line interface for user interaction
+
+---
+
+## Service Architecture
+
+### **🔄 Oracle Eye (Service 1)**
+- **Purpose**: Continuous message collection
+- **Operation**: Runs independently in background
+- **Technology**: Telethon, SQLModel, Background Scheduler
+- **Communication**: Writes to shared database
+
+### **🤖 Neural Core (Service 2)**
+- **Purpose**: AI processing and user interface
+- **Operation**: Runs on-demand via CLI commands
+- **Technology**: CrewAI, Typer, SQLModel
+- **Communication**: Reads from shared database
 
 ---
 
@@ -31,13 +48,15 @@
 
 ## Competitive advantage
 
-- **Full automation** - no manual intervention
-- **Smart AI** - CrewAI optimizes processing
-- **Cost transparency** - know the cost before processing
-- **Simplicity** - setup in minutes
+- **Service Independence**: Each service runs in its own Python environment
+- **Full Automation**: Oracle Eye collects messages continuously
+- **Smart AI**: CrewAI optimizes processing in Neural Core
+- **Cost Transparency**: Know the cost before processing
+- **Loose Coupling**: Services communicate only through database
+- **Scalability**: Deploy services on different machines if needed
 
 ---
 
 ## Result
 
-Instead of reading 1000+ messages per week, you receive a structured summary with the most important points, saving time and not missing relevant information.
+Instead of reading 1000+ messages per week, you receive a structured summary with the most important points, saving time and not missing relevant information. The system operates reliably with independent services that can be maintained and scaled separately.
