@@ -1,0 +1,6 @@
+telethon
+crewai
+typer
+python-dotenv
+sqlmodel
+sqlalchemy

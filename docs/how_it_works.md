@@ -1,38 +1,32 @@
 # How It Works
 
-Our agent transforms chaotic Telegram conversations into **clear, structured insights**.  
-Here's the simple flow:
+## Simple Flow
+
+1. **Setup:** Provide Telegram group and project name
+2. **Automatic Collection:** System collects messages daily
+3. **Processing:** AI identifies and summarizes what's important
+4. **Result:** You receive a structured summary
 
 ---
 
-## Step-by-Step
+## Technical Details
 
-1. **Project Setup**  
-   - You provide a Telegram group link and project documentation URL.  
-   - The system analyzes the documentation once to understand the project context.  
-   - This analysis is stored and reused for all future summaries.  
+### Intelligent Collection
+- Monitors public Telegram groups
+- Collects only text and links (no media)
+- Uses checkpoint system for efficiency
+- Configurable frequency (default: daily)
 
-2. **Continuous Message Collection**  
-   - Our system continuously reads messages from the chosen Telegram groups/channels.  
-   - It captures text, media, and links, but ignores spam and irrelevant chatter.  
-   - All messages are stored in SQLite database with timestamps.  
+### AI Processing
+- CrewAI coordinates the summary process
+- Automatically identifies relevant content
+- Generates summaries in markdown format
+- Filters noise and spam
 
-3. **On-Demand Summarization**  
-   - When you want a summary, you select a date range.  
-   - The system counts messages in that range and estimates the processing cost.  
-   - You can adjust the range if the cost is too high.  
-
-4. **Context-Aware Processing**  
-   - The system retrieves the most recent previous summary as context.  
-   - It processes only the new messages in your selected range.  
-   - The LLM generates a summary that builds on previous context.  
-
-5. **Output Generation**  
-   - You receive:  
-     - A **Structured Summary** with highlights and context.  
-     - **Direct links** to important Telegram messages.  
-     - **Cost report** showing actual processing expenses.  
-     - Optional **Twitter/X Thread** draft for sharing.  
+### Cost Control
+- Estimates cost before processing
+- Allows adjusting period if cost is too high
+- Total transparency in expenses
 
 ---
 
@@ -41,45 +35,23 @@ Here's the simple flow:
 ```mermaid
 flowchart TD
 
-A[Project Setup] --> B[Documentation Analysis]
-B --> C[Continuous Message Collection]
+A[Project Setup] --> B[Basic Project Info]
+B --> C[Automatic Message Collection]
 C --> D[SQLite Storage]
 D --> E[User Requests Summary]
 E --> F[Cost Estimation]
 F --> G[User Confirms Range]
-G --> H[Context Retrieval]
+G --> H[CrewAI Processing]
 H --> I[LLM Summarization]
-I --> J[Structured Output]
+I --> J[Markdown Output]
 J --> K[User Receives Summary]
 
-D -->|Previous summaries| H
 F -->|Cost too high| G
 ```
 
-## Key Concepts
+## Benefits
 
-### Checkpoint System
-- **Previous summaries** are stored as checkpoints
-- **New summaries** build on the most recent checkpoint
-- **Context continuity** is maintained across summaries
-- **Cost efficiency** by not reprocessing old messages
-
-### Cost Estimation
-- **Message count** determines processing cost
-- **Date range selection** allows cost control
-- **Real-time estimation** before processing
-- **User decision** based on cost vs. value
-
-### Project Analysis
-- **One-time process** per monitored project
-- **Documentation understanding** for better context
-- **Stored permanently** in database
-- **Reused** for all future summaries
-
-## Why It's Powerful
-
-- **Efficiency**: Only processes new messages, not entire history
-- **Cost Control**: Know the cost before processing
-- **Continuity**: Each summary connects with previous ones
-- **Transparency**: Direct message links for verification
-- **Flexibility**: Choose any date range for summarization
+- **Time:** Saves hours of manual reading
+- **Quality:** AI identifies what really matters
+- **Control:** Know the cost before processing
+- **Simplicity:** Command line interface

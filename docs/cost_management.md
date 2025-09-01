@@ -62,7 +62,7 @@ cost = estimate_summarization_cost(messages, "openai", "gpt-4-turbo")
 1. **Simple Token Counting**
    - Count total tokens from all messages in the selected date range
    - Add estimated output tokens (~500 tokens for summary)
-   - Add context overhead if using previous summaries
+   - **No context overhead** in MVP (simplified approach)
 
 2. **Pricing (OpenAI GPT-4 Turbo)**
    - Input tokens: $0.01 per 1K tokens
@@ -99,11 +99,11 @@ cost = estimate_summarization_cost(messages, "openai", "gpt-4-turbo")
 
 ---
 
-## Integration with Checkpoint System
+## MVP Simplification
 
-The cost estimation works with the checkpoint summarization system:
+**Note:** This MVP version focuses on **simple cost estimation** without complex context handling:
 
-- **Previous summaries** are included in context (adds token overhead)
-- **New messages only** are counted for cost estimation
-- **Context overhead** is added for continuity
-- **Total cost** includes both new processing and context inclusion 
+- **No previous summaries** included in context
+- **No checkpoint system** overhead
+- **Basic token counting** for selected messages only
+- **Future versions** will include advanced context features 

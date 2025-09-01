@@ -1,7 +1,7 @@
-# Weekly Digest — Example
+# Weekly Digest — Example (MVP Version)
 
 Welcome to your weekly digest!  
-Here’s everything that happened this week in **Project XYZ** so you don’t miss a thing.  
+Here's everything that happened this week in **Project XYZ** so you don't miss a thing.  
 
 ---
 
@@ -10,53 +10,43 @@ Here’s everything that happened this week in **Project XYZ** so you don’t mi
 ### 🔑 Key Announcements  
 - **New Staking Program Launched**  
   Users can now stake $XYZ tokens with flexible lock periods.  
-  📎 [See original message](https://t.me/projectxyz/12345)  
 
 - **Partnership with DeFi Protocol ABC**  
   Strategic partnership announced to expand liquidity pools.  
-  📎 [See original message](https://t.me/projectxyz/12387)  
 
 ---
 
 ### 🛠 Development Updates  
 - Mobile app entered **closed beta testing**. Invites sent to 500 community members.  
-  📎 [See original message](https://t.me/projectxyz/12401)  
 
 - Smart contract audit completed with no critical issues.  
-  📎 [See original message](https://t.me/projectxyz/12422)  
 
 ---
 
 ### 🌍 Community Highlights  
 - AMA session scheduled with the founders on **Sep 5th**.  
-  📎 [See original message](https://t.me/projectxyz/12455)  
 
 - Community voted to fund a new marketing campaign (75% approval).  
-  📎 [See original message](https://t.me/projectxyz/12477)  
 
 ---
 
-### 📊 Continuity & Context  
-(Compared to last week’s digest)  
-- The staking program mentioned in Week 34 was **successfully launched**.  
-- Beta testing follows up on the app preview shared last week.  
-- Community governance continues to gain traction after the first proposals voted on in Week 33.  
+### 📊 Summary  
+This week saw significant progress with the launch of the staking program and the start of mobile app beta testing. The community remains engaged with governance decisions and upcoming events.
 
 ---
 
-## 🐦 Suggested Twitter/X Thread (Draft)
+## 🎯 MVP Features
 
-1/ Here’s what happened this week in **Project XYZ** 🚀  
+**Current Version:**
+- ✅ **Basic summarization** of key events
+- ✅ **Structured format** for easy reading
+- ✅ **Cost-controlled** processing
 
-- New staking program launched  
-- Partnership with DeFi Protocol ABC  
-- Mobile app beta testing started  
-- Smart contract audit completed  
-- AMA with founders announced  
-- Marketing campaign approved  
-
-2/ The ecosystem is moving fast — stay tuned for next week’s updates!  
+**Future Versions (Phase 2+):**
+- 🔄 **Message links** to original Telegram messages
+- 🔄 **Twitter thread generation**
+- 🔄 **Enhanced context** from previous summaries
 
 ---
 
-✅ That’s your weekly overview! You now have both the **digest with links** and a **ready-to-share thread**.
+✅ That's your weekly overview! The MVP provides **essential insights** while keeping costs predictable and processing simple.

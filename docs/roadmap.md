@@ -4,84 +4,71 @@ This roadmap shows the **planned development steps** to build the AI-powered Tel
 
 ---
 
-## Phase 1 — Core MVP
+## Phase 1 — Core MVP (6 weeks)
 
-**Goal:** Collect Telegram messages, estimate costs, and generate summaries on-demand.  
+**Goal:** Collect Telegram messages automatically, estimate costs, and generate summaries on-demand using CrewAI.
 
-- [ ] Telegram integration (read messages from selected groups)  
-- [ ] SQLite database schema for storing messages and metadata  
+- [ ] Telegram integration via Telethon (read messages from public groups)
+- [ ] SQLite database schema for storing messages and metadata
 - [ ] **Cost estimation function** - calculates LLM processing cost based on message count
-- [ ] **Project analysis setup** - one-time analysis of project documentation for context
-- [ ] **Checkpoint-based summarization** - summarize specific date ranges with context from previous summaries
-- [ ] Basic LLM summarization pipeline (LangChain)  
-- [ ] Command-line script to run collection + summary  
+- [ ] **Automatic message collection** - daily collection with checkpoint system
+- [ ] **CrewAI integration** - intelligent AI orchestration for summarization
+- [ ] **Basic CLI interface** with Typer for user interaction
 
 **Estimated order:**  
-1. Telegram integration  
-2. Database design  
+1. Telegram integration (Telethon)
+2. Database design
 3. Cost estimation function
-4. Project analysis setup
-5. Checkpoint summarization system
-6. Summarization pipeline  
-7. CLI script  
+4. Automatic collection system
+5. CrewAI summarization pipeline
+6. CLI interface
 
 **Key Features:**
-- **Continuous message extraction** and storage in SQLite
+- **Automatic message collection** and storage in SQLite
 - **Cost estimation** before processing (100 messages vs 100,000 messages)
 - **On-demand summarization** with date range selection
-- **Context-aware summaries** using previous checkpoint data
-- **One-time project analysis** from documentation links
+- **CrewAI processing** for optimal AI orchestration
+- **Simple markdown output** without complex context
 
 ---
 
-## Phase 2 — Enhanced Context & Continuity
+## Phase 2 — Enhanced Features (Future)
 
-**Goal:** Improve summarization quality with better context handling.  
+**Goal:** Improve functionality with advanced features.
 
-- [ ] Store previous summaries in the database  
-- [ ] Enhance LLM prompts to consider previous checkpoints  
-- [ ] Update digest generation to include continuity and cross-period insights  
+- [ ] Store previous summaries in the database for context
+- [ ] Project documentation analysis for better understanding
+- [ ] Message linking to original Telegram messages
+- [ ] Twitter/X thread generation from summaries
 
-**Dependencies:** Phase 1 fully implemented  
-
----
-
-## Phase 3 — Highlight Linking & Thread Drafts
-
-**Goal:** Add **message links** and **Twitter/X thread generation**.  
-
-- [ ] Extract message links for key highlights  
-- [ ] Create thread drafting module based on digest  
-- [ ] Optional: export thread draft in JSON/Markdown for review  
-
-**Dependencies:** Phase 1 & Phase 2 completed  
+**Dependencies:** Phase 1 fully implemented and validated
 
 ---
 
-## Phase 4 — Automation & Delivery
+## Phase 3 — Automation & Delivery (Future)
 
-**Goal:** Fully automated weekly workflow and delivery options.  
+**Goal:** Fully automated workflow and delivery options.
 
-- [ ] Scheduler / cron job for continuous message collection  
-- [ ] Delivery via email, Telegram, or web dashboard  
-- [ ] Optional: auto-preview for thread drafts  
+- [ ] Scheduler / cron job for continuous message collection
+- [ ] Delivery via email, Telegram, or web dashboard
+- [ ] Advanced analytics and metrics
 
 ---
 
-## Phase 5 — Advanced Features (Future)
+## Phase 4 — Advanced Features (Future)
 
-**Goal:** Enhance user experience and insights.  
+**Goal:** Enhance user experience and insights.
 
-- [ ] Multi-community tracking  
-- [ ] Personalized notifications & alerts  
-- [ ] Analytics dashboard (trends, governance metrics, sentiment)  
-- [ ] Mobile app or web app interface  
+- [ ] Multi-community tracking
+- [ ] Personalized notifications & alerts
+- [ ] Analytics dashboard (trends, governance metrics, sentiment)
+- [ ] Mobile app or web app interface
 
 ---
 
 ## Notes
 
-- Each phase builds on the previous, so the **priority is linear**.  
-- MVP can be released internally once Phase 1 is stable.  
-- **Cost estimation** is critical for user decision-making on summarization ranges.
-- **Project analysis** runs only once per monitored project.
+- **MVP focus:** Automatic collection + CrewAI summarization + cost control
+- **Phase 1 priority:** Get core functionality working with real data
+- **Cost estimation** is critical for user decision-making on summarization ranges
+- **Project analysis** and advanced features moved to Phase 2+

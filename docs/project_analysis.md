@@ -1,12 +1,14 @@
-# Project Analysis System
+# Project Analysis System (Phase 2 - Future Feature)
 
-The Crypto Community Insights Agent includes a **one-time project analysis system** that understands the project context from documentation to improve summarization quality.
+> **⚠️ Note:** This feature is planned for Phase 2 and is NOT part of the current MVP scope.
+
+The Crypto Community Insights Agent will include a **one-time project analysis system** that understands the project context from documentation to improve summarization quality.
 
 ---
 
 ## What is Project Analysis?
 
-When you start monitoring a new Telegram group, you provide a link to the project's documentation (website, whitepaper, GitHub, etc.). The system analyzes this documentation once to understand:
+When you start monitoring a new Telegram group, you will provide a link to the project's documentation (website, whitepaper, GitHub, etc.). The system will analyze this documentation once to understand:
 
 - **Project purpose and goals**
 - **Key terminology and concepts**
@@ -15,11 +17,20 @@ When you start monitoring a new Telegram group, you provide a link to the projec
 - **Community governance model**
 - **Recent developments and roadmap**
 
-This analysis is stored permanently and used as context for all future summaries.
+This analysis will be stored permanently and used as context for all future summaries.
 
 ---
 
-## How It Works
+## Current MVP Status
+
+**❌ NOT INCLUDED in Phase 1 MVP**
+- Project analysis is a **future enhancement**
+- Current MVP focuses on **basic message collection and summarization**
+- **No documentation analysis** in initial release
+
+---
+
+## How It Will Work (Future Implementation)
 
 ### 1. Documentation Input
 ```python
@@ -49,7 +60,7 @@ def setup_project_monitoring(
 5. **Reuse**: Analysis is used in all future summarization prompts
 
 ### 3. Context Integration
-The extracted project context is included in every summarization prompt:
+The extracted project context will be included in every summarization prompt:
 
 ```
 Context: This is a DeFi lending protocol focused on cross-chain liquidity. 
@@ -80,7 +91,7 @@ When summarizing Uniswap Telegram messages, the system will:
 
 ---
 
-## Database Schema
+## Database Schema (Future)
 
 ```sql
 CREATE TABLE project_analyses (
@@ -108,7 +119,7 @@ CREATE TABLE summaries (
 
 ---
 
-## Benefits
+## Benefits (Future)
 
 ### 1. Better Summarization Quality
 - **Context-aware** summaries that understand project-specific terminology
@@ -127,7 +138,7 @@ CREATE TABLE summaries (
 
 ---
 
-## Supported Documentation Sources
+## Supported Documentation Sources (Future)
 
 - **Project Websites**: Official project websites and landing pages
 - **Whitepapers**: Technical documentation and tokenomics
@@ -137,7 +148,7 @@ CREATE TABLE summaries (
 
 ---
 
-## Analysis Limitations
+## Analysis Limitations (Future)
 
 - **Static Analysis**: Only analyzes documentation at setup time
 - **Manual Updates**: Project analysis doesn't auto-update
@@ -151,4 +162,19 @@ CREATE TABLE summaries (
 - **Periodic Re-analysis**: Auto-update project context quarterly
 - **Multi-language Support**: Analyze documentation in multiple languages
 - **Dynamic Context**: Include recent developments in context
-- **Community Feedback**: Allow users to refine project understanding 
+- **Community Feedback**: Allow users to refine project understanding
+
+---
+
+## Development Priority
+
+**Phase 1 MVP (Current):** Focus on core functionality
+- ✅ Telegram integration
+- ✅ Message collection
+- ✅ Basic summarization
+- ✅ Cost estimation
+
+**Phase 2 (Future):** Add project analysis
+- 🔄 Project documentation analysis
+- 🔄 Enhanced context for summaries
+- 🔄 Better understanding of project terminology
