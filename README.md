@@ -60,7 +60,7 @@ This project solves the crypto community monitoring challenge by **automating me
 ### **High-Level System Design**
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    SINGLE PYTHON ENVIRONMENT                │
+│                    SERVER                                   │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐    ┌─────────────────────────────────┐ │
 │  │   SERVICE 1     │    │           SERVICE 2             │ │

@@ -1,3 +1,5 @@
 TODO.md
 .env
 EXECUTIVE_SUMMARY.md
+shared/*
+*.pyc
