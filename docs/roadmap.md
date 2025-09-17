@@ -17,7 +17,7 @@ This roadmap shows the **planned development steps** to build the AI-powered Tel
 
 ### **Neural Core Service (Python Environment 2)**
 - [ ] **Cost estimation function** - calculates LLM processing cost based on message count
-- [ ] **CrewAI integration** - intelligent AI orchestration for summarization
+- [ ] **LangChain integration** - intelligent AI orchestration for summarization
 - [ ] **CLI interface** with Typer for user interaction
 - [ ] **On-demand processing** - runs only when CLI commands are executed
 

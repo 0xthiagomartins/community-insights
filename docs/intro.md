@@ -13,7 +13,7 @@
 ## What it does
 
 1. **Oracle Eye Service**: Automatically collects messages from public Telegram groups
-2. **Neural Core Service**: Processes data via CrewAI to identify what's important
+2. **Neural Core Service**: Processes data via LangChain to identify what's important
 3. **Shared Database**: Enables loose coupling between services
 4. **Structured Output**: Easy-to-read summaries in markdown format
 5. **Cost Control**: Transparent cost estimation before processing
@@ -32,7 +32,7 @@
 ### **🤖 Neural Core (Service 2)**
 - **Purpose**: AI processing and user interface
 - **Operation**: Runs on-demand via CLI commands
-- **Technology**: CrewAI, Typer, SQLModel
+- **Technology**: LangChain, Typer, SQLModel
 - **Communication**: Reads from shared database
 
 ---

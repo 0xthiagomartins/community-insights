@@ -18,7 +18,7 @@ Crypto projects evolve rapidly, and communities generate **hundreds of messages 
 ### **The Solution**
 Our agent provides **automated message collection and cost-controlled AI summarization**:
 - **Automatic collection** of messages via Telegram (Telethon)
-- **Intelligent AI processing** via CrewAI for optimal results
+- **Intelligent AI processing** via LangChain for optimal results
 - **Transparent cost control** before processing
 - **Simple command-line interface** for easy interaction
 
@@ -31,7 +31,7 @@ This project solves the crypto community monitoring challenge by **automating me
 - 📱 **Daily Collection**: Automatically extracts messages from selected Telegram groups
 - 💾 **Smart Storage**: SQLite database with SQLModel ORM for efficient data management
 - 💰 **Cost Control**: Estimates LLM processing costs before summarization
-- 🤖 **AI Intelligence**: CrewAI orchestrates the summarization process
+- 🤖 **AI Intelligence**: LangChain orchestrates the summarization process
 - 📊 **Structured Output**: Clean, organized summaries in markdown format
 - ⚡ **Real-time Processing**: On-demand summaries for any date range
 
@@ -42,7 +42,7 @@ This project solves the crypto community monitoring challenge by **automating me
 ### **Core MVP Features**
 - **🔄 Automatic Message Collection**: Daily collection from public Telegram groups using Telethon
 - **💰 Cost Estimation**: Calculates expected processing costs before summarization
-- **🤖 AI-Powered Summaries**: CrewAI generates intelligent, structured summaries
+- **🤖 AI-Powered Summaries**: LangChain generates intelligent, structured summaries
 - **📊 Flexible Date Ranges**: Choose any period for summarization based on cost estimates
 - **💾 Local Database**: SQLite storage with SQLModel for efficient data management
 - **💻 Command Line Interface**: Simple Typer-based CLI for all operations
@@ -66,7 +66,7 @@ This project solves the crypto community monitoring challenge by **automating me
 │  │   SERVICE 1     │    │           SERVICE 2             │ │
 │  │  ORACLE EYE     │    │      NEURAL CORE                │ │
 │  │                 │    │                                 │ │
-│  │ • Telethon      │    │ • CrewAI                        │ │
+│  │ • Telethon      │    │ • LangChain                     │ │
 │  │ • Scheduler     │    │ • Cost Estimation               │ │
 │  │ • SQLModel      │    │ • Summary Generation            │ │
 │  │ • Background    │    │ • CLI Interface                 │ │
@@ -76,7 +76,7 @@ This project solves the crypto community monitoring challenge by **automating me
 
 ### **Data Flow**
 ```
-Telegram Groups → Telethon Collection → SQLModel ORM → CrewAI Processing → Markdown Output
+Telegram Groups → Telethon Collection → SQLModel ORM → LangChain Processing → Markdown Output
 ```
 
 ---
@@ -91,7 +91,7 @@ Telegram Groups → Telethon Collection → SQLModel ORM → CrewAI Processing �
 
 ### **Competitive Advantages**
 - **🚀 Full Automation**: No manual intervention required for message collection
-- **🤖 Optimized AI**: CrewAI provides superior summarization quality
+- **🤖 Optimized AI**: LangChain provides superior summarization quality
 - **💰 Cost Transparency**: Know the exact cost before processing
 - **⚡ Setup in Minutes**: Simple configuration and immediate operation
 - **🔒 Privacy First**: Local data storage, no external dependencies
@@ -102,14 +102,14 @@ Telegram Groups → Telethon Collection → SQLModel ORM → CrewAI Processing �
 
 ### **Core Technologies**
 - **📱 Telegram Integration**: [Telethon](https://docs.telethon.dev/) (official API)
-- **🤖 AI Orchestration**: [CrewAI](https://docs.crewai.com/) (intelligent agent coordination)
+- **🤖 AI Orchestration**: [LangChain](https://python.langchain.com/) (intelligent AI processing)
 - **💻 User Interface**: [Typer](https://typer.tiangolo.com/) (modern CLI framework)
 - **🗄️ Database**: [SQLModel](https://sqlmodel.tiangolo.com/) (SQLAlchemy + Pydantic)
 - **💾 Storage**: SQLite (local, efficient, no external dependencies)
 
 ### **Development Tools**
 - **🐍 Python 3.8+**: Modern Python with async/await support
-- **📦 Package Management**: pip with requirements.txt
+- **📦 Package Management**: pip + requirements.txt (standard Python)
 - **🔧 Configuration**: python-dotenv for environment variables
 - **📝 Logging**: Structured logging with rotation
 
@@ -188,7 +188,7 @@ TELEGRAM_API_ID=your_api_id
 TELEGRAM_API_HASH=your_api_hash
 TELEGRAM_PHONE_NUMBER=your_phone
 
-# OpenAI API (for CrewAI)
+# OpenAI API (for LangChain)
 OPENAI_API_KEY=your_openai_key
 
 # Optional configurations
@@ -268,4 +268,4 @@ We welcome contributions! Please see our contributing guidelines for:
 
 ---
 
-This project represents a **unique opportunity** to automate crypto community intelligence using cutting-edge AI technology. By combining **Telethon automation**, **CrewAI intelligence**, and **SQLModel efficiency**, we create a powerful tool that can **scale rapidly** and generate **significant value** for users who need to track multiple projects simultaneously.
+This project represents a **unique opportunity** to automate crypto community intelligence using cutting-edge AI technology. By combining **Telethon automation**, **LangChain intelligence**, and **SQLModel efficiency**, we create a powerful tool that can **scale rapidly** and generate **significant value** for users who need to track multiple projects simultaneously.

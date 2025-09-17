@@ -14,7 +14,7 @@ The system is built as **two independent services** that communicate through a s
 - **Purpose**: AI processing and user interface
 - **Operation**: Runs on-demand via CLI commands
 - **Communication**: Reads from shared database
-- **Dependencies**: CrewAI, Typer, SQLModel
+- **Dependencies**: LangChain, Typer, SQLModel
 
 ---
 

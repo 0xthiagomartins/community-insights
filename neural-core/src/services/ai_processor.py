@@ -1,8 +1,13 @@
 import logging
+import os
 from typing import List, Optional
 from datetime import datetime
 from dataclasses import dataclass
-from crewai import Agent, Task, Crew, Process
+
+from langchain_openai import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain.schema import HumanMessage, SystemMessage
+
 from models import Project, Message, Summary
 from services.database import DatabaseManager
 from utils.config import Config
@@ -21,41 +26,52 @@ class AIProcessor:
     def __init__(self):
         self.config = Config()
         self.db = DatabaseManager()
-        self._setup_crewai()
+        self._setup_langchain()
     
-    def _setup_crewai(self):
-        """Configura os agentes CrewAI"""
+    def _setup_langchain(self):
+        """Configura o LangChain com OpenAI"""
         try:
-            # Set OpenAI API key for CrewAI
-            import os
+            # Set OpenAI API key
             os.environ["OPENAI_API_KEY"] = self.config.OPENAI_API_KEY
             if self.config.OPENAI_ORGANIZATION_ID:
                 os.environ["OPENAI_ORGANIZATION_ID"] = self.config.OPENAI_ORGANIZATION_ID
             
-            # Agente analisador de mensagens
-            self.message_analyzer = Agent(
-                role="Community Insights Analyst",
-                goal="Analyze community messages and identify important information",
-                backstory="You are an expert community analyst who understands community dynamics, project updates, and sentiment.",
-                verbose=self.config.CREWAI_VERBOSE,
-                allow_delegation=False,
-                memory=self.config.CREWAI_MEMORY
+            # Initialize ChatOpenAI
+            self.llm = ChatOpenAI(
+                model=self.config.DEFAULT_MODEL,
+                temperature=0.1,
+                verbose=self.config.LANGCHAIN_VERBOSE
             )
             
-            # Agente gerador de resumos
-            self.summary_generator = Agent(
-                role="Content Summarizer",
-                goal="Create clear, structured summaries of community discussions",
-                backstory="You are a skilled content creator who can distill complex information into actionable insights.",
-                verbose=self.config.CREWAI_VERBOSE,
-                allow_delegation=False,
-                memory=self.config.CREWAI_MEMORY
-            )
+            # Create prompt template
+            self.prompt_template = ChatPromptTemplate.from_messages([
+                SystemMessage(content="""You are an expert community analyst who specializes in analyzing community discussions and extracting key insights. 
+                
+Your task is to analyze community messages and create a comprehensive summary that highlights:
+1. Key announcements and updates
+2. Important discussions and decisions  
+3. Community sentiment and concerns
+4. Technical developments
+5. Governance activities
+
+Format your response as a clear, structured markdown summary with the following sections:
+## Key Announcements
+## Development Updates
+## Community Highlights  
+## Summary
+
+Be concise but informative, focusing on actionable insights that would be valuable for community members."""),
+                HumanMessage(content="""Please analyze the following community messages from {project_name} and create a comprehensive summary:
+
+{messages_text}
+
+Focus on extracting the most important information and presenting it in a clear, structured format.""")
+            ])
             
-            logger.info("✅ CrewAI agents configured successfully")
+            logger.info("✅ LangChain configured successfully")
             
         except Exception as e:
-            logger.error(f"❌ Error setting up CrewAI: {e}")
+            logger.error(f"❌ Error setting up LangChain: {e}")
             raise
     
     def estimate_cost(self, project: Project, start_date: datetime, end_date: datetime) -> CostEstimate:
@@ -82,9 +98,9 @@ class AIProcessor:
             output_tokens = 500  # Resumo estimado
             total_tokens = estimated_tokens + output_tokens
             
-            # Calcula custo (GPT-4 Turbo pricing)
-            input_cost = (estimated_tokens / 1000) * 0.01  # $0.01 per 1K tokens
-            output_cost = (output_tokens / 1000) * 0.03    # $0.03 per 1K tokens
+            # Calcula custo (GPT-3.5 Turbo pricing)
+            input_cost = (estimated_tokens / 1000) * 0.0015  # $0.0015 per 1K tokens
+            output_cost = (output_tokens / 1000) * 0.002     # $0.002 per 1K tokens
             total_cost = input_cost + output_cost
             
             cost_per_message = total_cost / len(messages) if messages else 0.0
@@ -121,51 +137,15 @@ class AIProcessor:
             # Prepara dados para processamento
             messages_text = self._prepare_messages_for_ai(messages)
             
-            # Cria tarefas CrewAI
-            analysis_task = Task(
-                description=f"""
-                Analyze the following crypto community messages from {project.name} 
-                and identify the most important information:
-                
-                {messages_text}
-                
-                Focus on:
-                - Key announcements and updates
-                - Important discussions and decisions
-                - Community sentiment and concerns
-                - Technical developments
-                - Governance activities
-                """,
-                agent=self.message_analyzer,
-                expected_output="Structured analysis of key information from the messages"
-            )
-            
-            summary_task = Task(
-                description="""
-                Create a clear, structured summary based on the analysis.
-                Format the summary in markdown with the following sections:
-                
-                ## Key Announcements
-                ## Development Updates  
-                ## Community Highlights
-                ## Summary
-                
-                Make it concise but informative, focusing on actionable insights.
-                """,
-                agent=self.summary_generator,
-                expected_output="Well-structured markdown summary"
+            # Cria o prompt
+            prompt = self.prompt_template.format_messages(
+                project_name=project.name,
+                messages_text=messages_text
             )
             
             # Executa o processamento
-            crew = Crew(
-                agents=[self.message_analyzer, self.summary_generator],
-                tasks=[analysis_task, summary_task],
-                process=Process.sequential,
-                verbose=self.config.CREWAI_VERBOSE
-            )
-            
-            result = crew.kickoff()
-            summary_content = str(result)
+            result = self.llm.invoke(prompt)
+            summary_content = result.content
             
             # Calcula custo real (aproximação)
             actual_cost = cost_estimate.total_cost * 1.1  # 10% de margem

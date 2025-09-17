@@ -23,9 +23,9 @@ class Config:
         self.LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
         self.LOG_FILE = os.getenv("LOG_FILE", "../shared/logs/neural_core.log")
         
-        # CrewAI configuration
-        self.CREWAI_VERBOSE = os.getenv("CREWAI_VERBOSE", "true").lower() == "true"
-        self.CREWAI_MEMORY = os.getenv("CREWAI_MEMORY", "true").lower() == "true"
+        # LangChain configuration
+        self.LANGCHAIN_VERBOSE = os.getenv("LANGCHAIN_VERBOSE", "true").lower() == "true"
+        self.LANGCHAIN_TRACING = os.getenv("LANGCHAIN_TRACING", "false").lower() == "true"
         
         # Validate required configuration
         self._validate_config()

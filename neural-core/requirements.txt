@@ -1,0 +1,9 @@
+langchain
+langchain-openai
+typer
+sqlmodel
+sqlalchemy
+python-dotenv
+openai
+rich
+pydantic
