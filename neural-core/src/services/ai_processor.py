@@ -33,8 +33,6 @@ class AIProcessor:
         try:
             # Set OpenAI API key
             os.environ["OPENAI_API_KEY"] = self.config.OPENAI_API_KEY
-            if self.config.OPENAI_ORGANIZATION_ID:
-                os.environ["OPENAI_ORGANIZATION_ID"] = self.config.OPENAI_ORGANIZATION_ID
             
             # Initialize ChatOpenAI
             self.llm = ChatOpenAI(

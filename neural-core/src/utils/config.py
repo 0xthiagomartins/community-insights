@@ -9,7 +9,6 @@ class Config:
     def __init__(self):
         # OpenAI API configuration
         self.OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-        self.OPENAI_ORGANIZATION_ID = os.getenv("OPENAI_ORGANIZATION_ID", "")
         
         # Cost control
         self.DEFAULT_COST_PER_1K_TOKENS = float(os.getenv("DEFAULT_COST_PER_1K_TOKENS", "0.002"))
@@ -17,7 +16,7 @@ class Config:
         self.MAX_COST_PER_SUMMARY = float(os.getenv("MAX_COST_PER_SUMMARY", "10.00"))
         
         # Database configuration
-        self.DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///../shared/database/community_insights.db")
+        self.DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///../shared/database/crypto_insights.db")
         
         # Logging configuration
         self.LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")

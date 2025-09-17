@@ -18,9 +18,9 @@ class DatabaseManager:
         """Cria as tabelas no banco de dados"""
         try:
             SQLModel.metadata.create_all(self.engine)
-            logger.info("✅ Database tables created successfully")
+            logger.info("Database tables created successfully")
         except Exception as e:
-            logger.error(f"❌ Error creating database tables: {e}")
+            logger.error(f"Error creating database tables: {e}")
             raise
     
     def get_session(self) -> Session:
@@ -39,7 +39,7 @@ class DatabaseManager:
             session.add(project)
             session.commit()
             session.refresh(project)
-            logger.info(f"✅ Project '{name}' created successfully")
+            logger.info(f"Project '{name}' created successfully")
             return project
     
     def get_project_by_name(self, name: str) -> Optional[Project]:
@@ -135,7 +135,7 @@ class DatabaseManager:
             session.add(summary)
             session.commit()
             session.refresh(summary)
-            logger.info(f"✅ Summary created for project {project_id}")
+            logger.info(f"Summary created for project {project_id}")
             return summary
     
     def get_summaries_by_project(self, project_id: int) -> List[Summary]:

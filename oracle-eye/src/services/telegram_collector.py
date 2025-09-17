@@ -30,22 +30,22 @@ class TelegramCollector:
             )
             
             await self.client.start(phone=self.phone)
-            logger.info("✅ Telegram client started successfully")
+            logger.info("Telegram client started successfully")
             
         except Exception as e:
-            logger.error(f"❌ Error starting Telegram client: {e}")
+            logger.error(f"Error starting Telegram client: {e}")
             raise
     
     async def disconnect(self):
         """Desconecta o cliente Telegram"""
         if self.client:
             await self.client.disconnect()
-            logger.info("✅ Telegram client disconnected")
+            logger.info("Telegram client disconnected")
     
     async def collect_messages(self, project: Project):
         """Coleta mensagens de um projeto"""
         try:
-            logger.info(f"🔄 Starting collection for project: {project.name}")
+            logger.info(f"Starting collection for project: {project.name}")
             
             # Busca o grupo/canal
             entity = await self.client.get_entity(project.telegram_group)
@@ -74,15 +74,15 @@ class TelegramCollector:
                     last_collected_message_id=last_message_id
                 )
             
-            logger.info(f"✅ Collected {messages_collected} new messages for {project.name}")
+            logger.info(f"Collected {messages_collected} new messages for {project.name}")
             
         except FloodWaitError as e:
-            logger.warning(f"⏰ Rate limit hit for {project.name}, waiting {e.seconds} seconds")
+            logger.warning(f"Rate limit hit for {project.name}, waiting {e.seconds} seconds")
             await asyncio.sleep(e.seconds)
         except ChannelPrivateError:
-            logger.error(f"❌ Channel {project.telegram_group} is private or inaccessible")
+            logger.error(f"Channel {project.telegram_group} is private or inaccessible")
         except Exception as e:
-            logger.error(f"❌ Error collecting messages from {project.name}: {e}")
+            logger.error(f"Error collecting messages from {project.name}: {e}")
             raise
     
     async def _process_message(self, message: TelegramMessage, project: Project) -> bool:
@@ -126,7 +126,7 @@ class TelegramCollector:
             return True
             
         except Exception as e:
-            logger.error(f"❌ Error processing message {message.id}: {e}")
+            logger.error(f"Error processing message {message.id}: {e}")
             return False
     
     def _get_existing_message(self, project_id: int, telegram_message_id: int) -> Optional[Message]:
@@ -143,8 +143,8 @@ class TelegramCollector:
         """Testa a conexão com um grupo/canal"""
         try:
             entity = await self.client.get_entity(telegram_group)
-            logger.info(f"✅ Successfully connected to {telegram_group}")
+            logger.info(f"Successfully connected to {telegram_group}")
             return True
         except Exception as e:
-            logger.error(f"❌ Error connecting to {telegram_group}: {e}")
+            logger.error(f"Error connecting to {telegram_group}: {e}")
             return False

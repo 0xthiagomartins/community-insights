@@ -19,13 +19,13 @@ def setup_logging():
 def main():
     setup_logging()
     logger = logging.getLogger(__name__)
-    logger.info("🤖 Starting Neural Core Service...")
-    logger.info("💻 Launching CLI interface...")
+    logger.info("Starting Neural Core Service...")
+    logger.info("Launching CLI interface...")
     
     try:
         app()
     except Exception as e:
-        logger.error(f"💥 Fatal error in Neural Core: {e}")
+        logger.error(f"Fatal error in Neural Core: {e}")
         raise
 
 if __name__ == "__main__":
