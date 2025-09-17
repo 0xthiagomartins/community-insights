@@ -54,6 +54,17 @@ class DatabaseManager:
             statement = select(Project).where(Project.is_active == True)
             return list(session.exec(statement))
     
+    def get_projects_ready_for_collection(self) -> List[Project]:
+        """Retorna projetos que estão prontos para coleta (agendamento vencido)"""
+        from datetime import datetime
+        with self.get_session() as session:
+            statement = select(Project).where(
+                Project.is_active == True,
+                (Project.next_collection_at.is_(None)) | 
+                (Project.next_collection_at <= datetime.utcnow())
+            )
+            return list(session.exec(statement))
+    
     def update_project(self, project_id: int, **kwargs) -> Optional[Project]:
         """Atualiza um projeto"""
         with self.get_session() as session:
@@ -157,3 +168,21 @@ class DatabaseManager:
         with self.get_session() as session:
             statement = select(Project)
             return list(session.exec(statement))
+    
+    def schedule_next_collection(self, project_id: int, interval_seconds: int) -> Optional[Project]:
+        """Agenda a próxima coleta para um projeto"""
+        from datetime import datetime, timedelta
+        with self.get_session() as session:
+            project = session.get(Project, project_id)
+            if not project:
+                return None
+            
+            next_collection = datetime.utcnow() + timedelta(seconds=interval_seconds)
+            project.next_collection_at = next_collection
+            project.updated_at = datetime.utcnow()
+            
+            session.add(project)
+            session.commit()
+            session.refresh(project)
+            logger.info(f"Next collection scheduled for {project.name} at {next_collection}")
+            return project

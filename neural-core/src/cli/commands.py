@@ -171,6 +171,40 @@ def check_status(
         raise typer.Exit(1)
 
 @app.command()
+def check_schedule(
+    project_name: Optional[str] = typer.Option(None, "--project", "-p", help="Project name (optional)")
+):
+    """Check collection schedule for projects"""
+    try:
+        if project_name:
+            project = db.get_project_by_name(project_name)
+            if not project:
+                typer.echo(f"Project '{project_name}' not found")
+                raise typer.Exit(1)
+            projects = [project]
+        else:
+            projects = db.get_all_projects()
+        
+        if not projects:
+            typer.echo("No projects configured yet")
+            return
+        
+        typer.echo("Collection Schedule:")
+        for project in projects:
+            status = "Active" if project.is_active else "Inactive"
+            if hasattr(project, 'next_collection_at') and project.next_collection_at:
+                next_collection = project.next_collection_at.strftime("%Y-%m-%d %H:%M:%S UTC")
+            else:
+                next_collection = "Not scheduled"
+            
+            typer.echo(f"  • {project.name} ({project.telegram_group}) - {status}")
+            typer.echo(f"    Next collection: {next_collection}")
+            
+    except Exception as e:
+        typer.echo(f"Error checking schedule: {e}")
+        raise typer.Exit(1)
+
+@app.command()
 def update_project(
     project_name: str = typer.Option(..., "--project", "-p", help="Project name"),
     new_name: Optional[str] = typer.Option(None, "--new-name", help="New project name"),

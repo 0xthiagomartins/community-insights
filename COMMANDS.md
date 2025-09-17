@@ -162,6 +162,43 @@ python src/main.py list-projects
 
 # Verificar status de coleta
 python src/main.py check-status --project "Taraxa"
+
+# Verificar agendamento de coleta
+python src/main.py check-schedule
+python src/main.py check-schedule --project "Taraxa"
+```
+
+---
+
+## ⏰ **Sistema de Agendamento Persistente**
+
+### **Como Funciona:**
+
+O Oracle Eye agora usa um **sistema de agendamento persistente** que resolve o problema de perda de timing quando o serviço cai:
+
+1. **Persistência**: Cada projeto tem `next_collection_at` salvo no banco
+2. **Verificação Contínua**: Oracle Eye verifica a cada minuto se há projetos prontos
+3. **Recuperação Inteligente**: Se cair e subir novamente, continua de onde parou
+
+### **Cenário de Recuperação:**
+
+```
+10:00 - Oracle Eye inicia, agenda próxima coleta para 10:00 do próximo dia
+20:00 - Oracle Eye cai (após 10 horas)
+08:00 - Oracle Eye sobe novamente
+08:00 - Verifica: próxima coleta era 10:00, ainda não chegou
+10:00 - Executa coleta automaticamente
+10:00 - Agenda próxima coleta para 10:00 do próximo dia
+```
+
+### **Comandos de Verificação:**
+
+```bash
+# Ver agendamento de todos os projetos
+python src/main.py check-schedule
+
+# Ver agendamento de um projeto específico
+python src/main.py check-schedule --project "Taraxa"
 ```
 
 ---

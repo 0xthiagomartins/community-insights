@@ -14,6 +14,7 @@ class Project(SQLModel, table=True):
     telegram_group: str = Field(index=True)
     is_active: bool = Field(default=True)
     last_collected_message_id: Optional[int] = Field(default=None)
+    next_collection_at: Optional[datetime] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     

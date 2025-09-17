@@ -58,20 +58,26 @@ class OracleEyeService:
                     for command in commands:
                         await self.process_immediate_command(command)
                 
-                # Regular scheduled collection
-                projects = self.db.get_active_projects()
-                logger.info(f"Starting scheduled collection for {len(projects)} projects")
-                for project in projects:
-                    try:
-                        await self.collector.collect_messages(project)
-                        await asyncio.sleep(5)  # Small delay between projects
-                    except Exception as e:
-                        logger.error(f"Error collecting from {project.name}: {e}")
-                        continue
+                # Check for projects ready for scheduled collection
+                projects_ready = self.db.get_projects_ready_for_collection()
+                if projects_ready:
+                    logger.info(f"Starting scheduled collection for {len(projects_ready)} projects")
+                    for project in projects_ready:
+                        try:
+                            await self.collector.collect_messages(project)
+                            # Schedule next collection after successful collection
+                            self.db.schedule_next_collection(project.id, self.config.COLLECTION_INTERVAL)
+                            await asyncio.sleep(5)  # Small delay between projects
+                        except Exception as e:
+                            logger.error(f"Error collecting from {project.name}: {e}")
+                            continue
+                    
+                    logger.info("Scheduled collection cycle completed successfully")
+                else:
+                    logger.info("No projects ready for collection at this time")
                 
-                logger.info("Collection cycle completed successfully")
-                logger.info(f"Waiting {self.config.COLLECTION_INTERVAL} seconds until next cycle...")
-                await asyncio.sleep(self.config.COLLECTION_INTERVAL)
+                # Wait 1 minute before checking again (instead of 24 hours)
+                await asyncio.sleep(60)
             except Exception as e:
                 logger.error(f"Collection loop error: {e}")
                 await asyncio.sleep(60 * 60)  # Wait 1 hour on error
@@ -96,6 +102,9 @@ class OracleEyeService:
             await self.collector.collect_messages(project)
             messages_after = self.db.get_message_count(project.id)
             messages_collected = messages_after - messages_before
+            
+            # Schedule next collection after immediate collection
+            self.db.schedule_next_collection(project.id, self.config.COLLECTION_INTERVAL)
             
             # Mark as completed
             self.command_monitor.mark_command_completed(project_name, messages_collected)
