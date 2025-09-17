@@ -145,3 +145,15 @@ class DatabaseManager:
                 Summary.project_id == project_id
             ).order_by(Summary.created_at.desc())
             return list(session.exec(statement))
+    
+    def get_message_count(self, project_id: int) -> int:
+        """Retorna o número total de mensagens de um projeto"""
+        with self.get_session() as session:
+            statement = select(Message).where(Message.project_id == project_id)
+            return len(list(session.exec(statement)))
+    
+    def get_all_projects(self) -> List[Project]:
+        """Retorna todos os projetos (ativos e inativos)"""
+        with self.get_session() as session:
+            statement = select(Project)
+            return list(session.exec(statement))

@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 from services.telegram_collector import TelegramCollector
 from services.database import DatabaseManager
+from services.command_monitor import CommandMonitor
 from utils.config import Config
 
 def setup_logging():
@@ -28,6 +29,7 @@ class OracleEyeService:
         self.config = Config()
         self.db = DatabaseManager()
         self.collector = None
+        self.command_monitor = CommandMonitor()
         self.running = False
 
     async def initialize(self):
@@ -49,8 +51,16 @@ class OracleEyeService:
         logger.info("Starting continuous collection loop...")
         while self.running:
             try:
+                # Check for immediate collection commands first
+                commands = self.command_monitor.check_for_commands()
+                if commands:
+                    logger.info(f"Processing {len(commands)} immediate collection commands")
+                    for command in commands:
+                        await self.process_immediate_command(command)
+                
+                # Regular scheduled collection
                 projects = self.db.get_active_projects()
-                logger.info(f"Starting collection for {len(projects)} projects")
+                logger.info(f"Starting scheduled collection for {len(projects)} projects")
                 for project in projects:
                     try:
                         await self.collector.collect_messages(project)
@@ -58,12 +68,43 @@ class OracleEyeService:
                     except Exception as e:
                         logger.error(f"Error collecting from {project.name}: {e}")
                         continue
+                
                 logger.info("Collection cycle completed successfully")
                 logger.info(f"Waiting {self.config.COLLECTION_INTERVAL} seconds until next cycle...")
                 await asyncio.sleep(self.config.COLLECTION_INTERVAL)
             except Exception as e:
                 logger.error(f"Collection loop error: {e}")
                 await asyncio.sleep(60 * 60)  # Wait 1 hour on error
+    
+    async def process_immediate_command(self, command):
+        """Process an immediate collection command"""
+        project_name = command["project_name"]
+        try:
+            logger.info(f"Processing immediate collection for {project_name}")
+            
+            # Mark as processing
+            self.command_monitor.mark_command_processing(project_name)
+            
+            # Get project from database
+            project = self.db.get_project_by_name(project_name)
+            if not project:
+                self.command_monitor.mark_command_failed(project_name, "Project not found")
+                return
+            
+            # Collect messages
+            messages_before = self.db.get_message_count(project.id)
+            await self.collector.collect_messages(project)
+            messages_after = self.db.get_message_count(project.id)
+            messages_collected = messages_after - messages_before
+            
+            # Mark as completed
+            self.command_monitor.mark_command_completed(project_name, messages_collected)
+            logger.info(f"Immediate collection completed for {project_name}: {messages_collected} new messages")
+            
+        except Exception as e:
+            error_msg = f"Error in immediate collection: {e}"
+            logger.error(error_msg)
+            self.command_monitor.mark_command_failed(project_name, error_msg)
 
     async def start(self):
         self.running = True

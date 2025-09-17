@@ -39,7 +39,7 @@ class DatabaseManager:
             session.add(project)
             session.commit()
             session.refresh(project)
-            logger.info(f"✅ Project '{name}' created successfully")
+            logger.info(f"Project '{name}' created successfully")
             return project
     
     def get_project_by_name(self, name: str) -> Optional[Project]:
