@@ -1,6 +1,0 @@
-crewai
-typer
-sqlmodel
-sqlalchemy
-python-dotenv
-openai

@@ -1,232 +1,118 @@
-# 🤖 Neural Core Service
+# Neural Core - Windows Setup Guide
 
-> **AI-powered processing and command-line interface for crypto insights**
+## 🚀 Quick Start (Windows + Poetry)
 
-The Neural Core Service provides **intelligent AI processing** and a **user-friendly CLI interface** for generating insights from collected Telegram messages.
+### Prerequisites
+- Python 3.11+
+- Scoop package manager
+- Pipx
+- Poetry
 
----
+### Installation Steps
 
-## 🎯 **Purpose**
-
-- **AI Processing**: CrewAI-powered summarization and analysis
-- **User Interface**: Typer-based command-line interface
-- **Cost Control**: Estimates and manages processing costs
-- **Data Access**: Reads from shared database (populated by Oracle Eye)
-
----
-
-## 🏗️ **Architecture**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    NEURAL CORE SERVICE                     │
-│                 (Python Environment 2)                     │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────────────────────────────────────────────────┐ │
-│  │              AI PROCESSING & CLI                        │ │
-│  │                                                         │ │
-│  │ • CrewAI (AI Orchestration)                            │ │
-│  │ • Typer (Command Line Interface)                       │ │
-│  │ • Cost Estimation                                      │ │
-│  │ • Summary Generation                                   │ │
-│  └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+1. **Install Scoop** (if not already installed):
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+irm get.scoop.sh | iex
 ```
 
----
+2. **Install Pipx via Scoop**:
+```powershell
+scoop install pipx
+pipx ensurepath
+```
 
-## 🚀 **Quick Start**
+3. **Install Poetry via Pipx**:
+```powershell
+pipx install poetry
+pipx ensurepath
+```
 
+4. **Verify installations**:
+```powershell
+scoop --version
+python --version
+pipx --version
+poetry --version
+```
+
+5. **Setup Neural Core**:
 ```bash
-# 1. Navigate to Neural Core directory
 cd neural-core
+poetry install --no-root
+poetry shell
+```
 
-# 2. Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Configure environment
+6. **Configure environment**:
+```bash
 cp env.example .env
 # Edit .env with your OpenAI API key
-
-# 5. Start CLI interface
-python -m cli.main
 ```
 
----
-
-## ⚙️ **Configuration**
-
-### **Required Environment Variables**
+7. **Test the CLI**:
 ```bash
-# OpenAI API (for CrewAI)
-OPENAI_API_KEY=your_openai_key
-
-# Cost control
-MAX_COST_PER_SUMMARY=10.00        # Maximum cost per summary
-
-# Database (shared with Oracle Eye)
-DATABASE_URL=sqlite:///../shared/database/crypto_insights.db
+python src/main.py --help
 ```
 
----
+## 🔧 Configuration
 
-## 📁 **Project Structure**
+### Environment Variables
+- `OPENAI_API_KEY`: Your OpenAI API key (required)
+- `OPENAI_ORGANIZATION_ID`: Your OpenAI organization ID (optional)
+- `DATABASE_URL`: Path to shared SQLite database
+- `CREWAI_VERBOSE`: Enable verbose CrewAI output (true/false)
+- `CREWAI_MEMORY`: Enable CrewAI memory (true/false)
 
+### OpenAI API Setup
+1. Go to [OpenAI Platform](https://platform.openai.com/account/organization)
+2. Verify your account and add funds
+3. Create a new API key
+4. Add the key to your `.env` file
+
+## 🎯 Usage
+
+### Available Commands
+- `setup-project`: Create a new project
+- `list-projects`: List all projects
+- `estimate-cost`: Estimate processing cost
+- `generate-summary`: Generate AI summary
+- `update-project`: Update project settings
+
+### Example Workflow
+```bash
+# Create a project
+python src/main.py setup-project "My Project" "telegram_group_id"
+
+# List projects
+python src/main.py list-projects
+
+# Estimate cost for last 7 days
+python src/main.py estimate-cost "My Project" --days 7
+
+# Generate summary
+python src/main.py generate-summary "My Project" --days 7
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+1. **Poetry not found**: Make sure `pipx ensurepath` was run and restart your terminal
+2. **OpenAI API errors**: Verify your API key and account has sufficient credits
+3. **Database errors**: Ensure Oracle Eye is running and database exists
+
+### Windows-Specific Notes
+- Use PowerShell for Scoop installation
+- Poetry shell creates a virtual environment automatically
+- CrewAI works better with Poetry on Windows than pip
+
+## 📁 Project Structure
 ```
 neural-core/
 ├── src/
-│   ├── main.py                 # Service entry point
-│   ├── cli/                    # Command-line interface
-│   │   ├── main.py            # CLI application
-│   │   └── commands.py        # Command implementations
-│   ├── services/               # AI processing services
-│   │   └── ai_processor.py
-│   ├── models/                 # SQLModel data models
-│   └── utils/                  # Configuration
-├── requirements.txt            # Python dependencies
-├── env.example                # Environment template
-└── README.md                  # This file
+│   ├── cli/           # CLI interface
+│   ├── models/        # Database models
+│   ├── services/      # Core services
+│   └── utils/         # Utilities
+├── pyproject.toml     # Poetry configuration
+└── env.example        # Environment template
 ```
-
----
-
-## 💻 **CLI Commands**
-
-### **Project Management**
-```bash
-# Setup new project for monitoring
-setup-project --name "Uniswap" --group "uniswap"
-
-# List all configured projects
-list-projects
-
-# Update project configuration
-update-project --project "Uniswap" --new-group "uniswap_v2"
-```
-
-### **AI Processing**
-```bash
-# Estimate processing cost
-estimate-cost --project "Uniswap" --days 7
-
-# Generate summary
-generate-summary --project "Uniswap" --days 7
-
-# Save summary to file
-generate-summary --project "Uniswap" --days 7 --output summary.md
-```
-
----
-
-## 🤖 **AI Processing**
-
-### **CrewAI Integration**
-- **Agent Orchestration**: Intelligent coordination of AI agents
-- **Context Management**: Efficient handling of large message volumes
-- **Quality Optimization**: Best practices for summarization
-
-### **Cost Estimation**
-- **Token Counting**: Accurate estimation of input/output tokens
-- **Provider Support**: OpenAI, Anthropic, and other LLM providers
-- **Cost Control**: Prevents unexpected expenses
-
-### **Summary Generation**
-- **Structured Output**: Clean, organized markdown summaries
-- **Relevance Filtering**: AI identifies important content
-- **Noise Reduction**: Filters spam and irrelevant messages
-
----
-
-## 🔗 **Integration**
-
-### **With Oracle Eye**
-- **Communication**: Via shared SQLite database
-- **Data Flow**: Oracle Eye writes → Neural Core reads
-- **No Direct Calls**: Loose coupling through database
-
-### **Shared Resources**
-- **Database**: `../shared/database/`
-- **Logs**: `../shared/logs/`
-
----
-
-## 📊 **Monitoring**
-
-### **Logs**
-- **Location**: `../shared/logs/neural_core.log`
-- **Level**: INFO with structured formatting
-- **Content**: CLI operations, AI processing, cost tracking
-
-### **Performance Metrics**
-- **Processing Time**: Summary generation duration
-- **Cost Accuracy**: Estimated vs actual costs
-- **User Interactions**: CLI command usage patterns
-
----
-
-## 🛠️ **Development**
-
-### **Testing**
-```bash
-# Activate environment
-source venv/bin/activate
-
-# Install test dependencies
-pip install pytest pytest-asyncio
-
-# Run tests
-pytest tests/
-```
-
-### **Adding New Commands**
-1. **Define Function**: Add new command function in `commands.py`
-2. **Register Command**: Add to `main.py` with `@app.command()`
-3. **Implement Logic**: Use existing services or create new ones
-4. **Add Tests**: Ensure proper testing coverage
-
-### **Extending AI Processing**
-- **New Models**: Add support for additional LLM providers
-- **Custom Agents**: Extend CrewAI with specialized agents
-- **Output Formats**: Support additional output formats beyond markdown
-
----
-
-## 🚨 **Troubleshooting**
-
-### **Common Issues**
-1. **OpenAI API Limits**: Check API key and rate limits
-2. **Database Access**: Ensure shared database is accessible
-3. **Memory Usage**: Large message volumes may require optimization
-
-### **Recovery**
-- **API Errors**: Automatic retry with exponential backoff
-- **Database Issues**: Graceful error handling and user feedback
-- **Cost Limits**: Automatic cancellation if cost exceeds limits
-
----
-
-## 📈 **Performance**
-
-### **Optimization Tips**
-- **Batch Processing**: Process multiple projects efficiently
-- **Caching**: Cache frequently accessed data
-- **Async Operations**: Use async/await for I/O operations
-- **Memory Management**: Monitor memory usage during AI processing
-
----
-
-## 🔮 **Future Enhancements**
-
-### **Planned Features**
-- **Project Analysis**: One-time documentation analysis for context
-- **Message Linking**: Direct links to original Telegram messages
-- **Twitter Threads**: Automatic social media content generation
-- **Analytics Dashboard**: Metrics and insights visualization
-
----
-
-**Neural Core provides intelligent AI processing with a simple CLI interface for crypto community insights! 🤖**

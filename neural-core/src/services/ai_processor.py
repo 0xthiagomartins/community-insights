@@ -26,22 +26,30 @@ class AIProcessor:
     def _setup_crewai(self):
         """Configura os agentes CrewAI"""
         try:
+            # Set OpenAI API key for CrewAI
+            import os
+            os.environ["OPENAI_API_KEY"] = self.config.OPENAI_API_KEY
+            if self.config.OPENAI_ORGANIZATION_ID:
+                os.environ["OPENAI_ORGANIZATION_ID"] = self.config.OPENAI_ORGANIZATION_ID
+            
             # Agente analisador de mensagens
             self.message_analyzer = Agent(
-                role="Crypto Community Analyst",
-                goal="Analyze crypto community messages and identify important information",
-                backstory="You are an expert crypto analyst who understands community dynamics, project updates, and market sentiment.",
-                verbose=True,
-                allow_delegation=False
+                role="Community Insights Analyst",
+                goal="Analyze community messages and identify important information",
+                backstory="You are an expert community analyst who understands community dynamics, project updates, and sentiment.",
+                verbose=self.config.CREWAI_VERBOSE,
+                allow_delegation=False,
+                memory=self.config.CREWAI_MEMORY
             )
             
             # Agente gerador de resumos
             self.summary_generator = Agent(
                 role="Content Summarizer",
-                goal="Create clear, structured summaries of crypto community discussions",
+                goal="Create clear, structured summaries of community discussions",
                 backstory="You are a skilled content creator who can distill complex information into actionable insights.",
-                verbose=True,
-                allow_delegation=False
+                verbose=self.config.CREWAI_VERBOSE,
+                allow_delegation=False,
+                memory=self.config.CREWAI_MEMORY
             )
             
             logger.info("✅ CrewAI agents configured successfully")
@@ -153,7 +161,7 @@ class AIProcessor:
                 agents=[self.message_analyzer, self.summary_generator],
                 tasks=[analysis_task, summary_task],
                 process=Process.sequential,
-                verbose=True
+                verbose=self.config.CREWAI_VERBOSE
             )
             
             result = crew.kickoff()
