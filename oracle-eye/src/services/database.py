@@ -131,7 +131,8 @@ class DatabaseManager:
     def create_summary(self, project_id: int, content: str,
                       date_range_start: datetime, date_range_end: datetime,
                       cost_estimate: float = 0.0, actual_cost: float = 0.0,
-                      message_count: int = 0) -> Summary:
+                      message_count: int = 0, summary_metadata: str = None, 
+                      citations: str = None, high_relevance_count: int = 0) -> Summary:
         """Cria um novo resumo"""
         with self.get_session() as session:
             summary = Summary(
@@ -141,7 +142,10 @@ class DatabaseManager:
                 date_range_end=date_range_end,
                 cost_estimate=cost_estimate,
                 actual_cost=actual_cost,
-                message_count=message_count
+                message_count=message_count,
+                summary_metadata=summary_metadata,
+                citations=citations,
+                high_relevance_count=high_relevance_count
             )
             session.add(summary)
             session.commit()

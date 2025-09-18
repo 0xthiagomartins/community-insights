@@ -18,6 +18,11 @@ class Summary(SQLModel, table=True):
     message_count: int = Field(default=0)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
+    # Novos campos para metadata e citações
+    summary_metadata: Optional[str] = Field(default=None)  # JSON string com metadata
+    citations: Optional[str] = Field(default=None)  # JSON string com citações
+    high_relevance_count: int = Field(default=0)  # Contador de mensagens de alta relevância
+    
     # Relacionamento com Project
     project: Optional["Project"] = Relationship(back_populates="summaries")
     

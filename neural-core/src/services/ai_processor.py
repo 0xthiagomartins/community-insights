@@ -1,6 +1,7 @@
 import logging
 import os
-from typing import List, Optional
+import json
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 from dataclasses import dataclass
 
@@ -10,6 +11,7 @@ from langchain.schema import HumanMessage, SystemMessage
 
 from models import Project, Message, Summary
 from services.database import DatabaseManager
+from services.relevance_analyzer import RelevanceAnalyzer
 from utils.config import Config
 
 logger = logging.getLogger(__name__)
@@ -26,6 +28,7 @@ class AIProcessor:
     def __init__(self):
         self.config = Config()
         self.db = DatabaseManager()
+        self.relevance_analyzer = RelevanceAnalyzer()
         self._setup_langchain()
     
     def _setup_langchain(self):
@@ -148,6 +151,12 @@ Focus on extracting the most important information and presenting it in a clear,
             # Calcula custo real (aproximação)
             actual_cost = cost_estimate.total_cost * 1.1  # 10% de margem
             
+            # Gera metadata e citações (sempre)
+            logger.info("Generating metadata and citations...")
+            metadata_json, citations_json, high_relevance_count = self._generate_metadata_and_citations(
+                messages, summary_content, project.name
+            )
+            
             # Cria o resumo no banco
             summary = self.db.create_summary(
                 project_id=project.id,
@@ -156,7 +165,10 @@ Focus on extracting the most important information and presenting it in a clear,
                 date_range_end=end_date,
                 cost_estimate=cost_estimate.total_cost,
                 actual_cost=actual_cost,
-                message_count=len(messages)
+                message_count=len(messages),
+                summary_metadata=metadata_json,
+                citations=citations_json,
+                high_relevance_count=high_relevance_count
             )
             
             logger.info(f"✅ Summary generated for {project.name} with {len(messages)} messages")
@@ -166,6 +178,67 @@ Focus on extracting the most important information and presenting it in a clear,
             logger.error(f"❌ Error generating summary: {e}")
             raise
     
+    def _generate_metadata_and_citations(self, messages: List[Message], summary_content: str, project_name: str) -> tuple:
+        """Gera metadata e citações para o resumo"""
+        try:
+            # Analisa relevância das mensagens
+            relevance_scores = self.relevance_analyzer.analyze_messages_batch(messages)
+            
+            # Gera metadata de relevância
+            metadata = self.relevance_analyzer.generate_relevance_metadata(messages, relevance_scores)
+            
+            # Gera citações baseadas no resumo
+            citations = self._extract_citations_from_summary(summary_content, messages, relevance_scores)
+            
+            # Conta mensagens de alta relevância
+            high_relevance_count = len([s for s in relevance_scores if s.score >= 80])
+            
+            # Converte para JSON
+            metadata_json = json.dumps(metadata, indent=2)
+            citations_json = json.dumps(citations, indent=2)
+            
+            logger.info(f"Generated metadata for {len(messages)} messages with {high_relevance_count} high-relevance")
+            
+            return metadata_json, citations_json, high_relevance_count
+            
+        except Exception as e:
+            logger.error(f"Error generating metadata and citations: {e}")
+            return None, None, 0
+
+    def _extract_citations_from_summary(self, summary_content: str, messages: List[Message], relevance_scores: List) -> List[Dict[str, Any]]:
+        """Extrai citações do resumo baseado nas mensagens de alta relevância"""
+        citations = []
+        
+        # Mapeia scores por message_id
+        score_map = {score.message_id: score for score in relevance_scores}
+        
+        # Pega mensagens de alta relevância
+        high_relevance_messages = []
+        for message in messages:
+            if message.id in score_map and score_map[message.id].score >= 80:
+                high_relevance_messages.append((message, score_map[message.id]))
+        
+        # Ordena por relevância
+        high_relevance_messages.sort(key=lambda x: x[1].score, reverse=True)
+        
+        # Cria citações para as top mensagens
+        for message, score in high_relevance_messages[:20]:  # Top 20 mensagens
+            citation = {
+                "message_id": message.id,
+                "telegram_message_id": message.telegram_message_id,
+                "author": message.author,
+                "timestamp": message.timestamp.isoformat(),
+                "content_preview": message.content[:200] + "..." if len(message.content) > 200 else message.content,
+                "relevance_score": score.score,
+                "category": score.category,
+                "confidence": score.confidence,
+                "keywords": score.keywords,
+                "reasoning": score.reasoning
+            }
+            citations.append(citation)
+        
+        return citations
+
     def _prepare_messages_for_ai(self, messages: List[Message]) -> str:
         """Prepara mensagens para processamento de IA"""
         formatted_messages = []

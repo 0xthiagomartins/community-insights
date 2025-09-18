@@ -1,4 +1,5 @@
 import typer
+import json
 from typing import Optional
 from datetime import datetime, timedelta
 from services.database import DatabaseManager
@@ -84,6 +85,8 @@ def generate_summary(
         start_date = end_date - timedelta(days=days)
         
         typer.echo(f" Generating summary for '{project_name}' ({days} days)...")
+        typer.echo(" Including metadata and citations...")
+        
         summary = ai_processor.generate_summary(project, start_date, end_date)
         
         if output_file:
@@ -96,6 +99,14 @@ def generate_summary(
             typer.echo("="*50)
             typer.echo(summary.content)
             typer.echo("="*50)
+            
+            # Mostra metadata (sempre disponível)
+            if summary.summary_metadata:
+                typer.echo("\n" + "="*50)
+                typer.echo(" METADATA")
+                typer.echo("="*50)
+                _display_metadata(summary)
+                typer.echo("="*50)
         
         typer.echo(f" Actual Cost: ${summary.actual_cost:.2f}")
         
@@ -243,6 +254,52 @@ def update_project(
     except Exception as e:
         typer.echo(f" Error updating project: {e}")
         raise typer.Exit(1)
+
+def _display_metadata(summary):
+    """Exibe metadata de forma legível"""
+    try:
+        if not summary.summary_metadata:
+            typer.echo("No metadata available")
+            return
+        
+        metadata = json.loads(summary.summary_metadata)
+        
+        # Estatísticas gerais
+        typer.echo(f"Total Messages: {metadata.get('total_messages', 0)}")
+        typer.echo(f"High Relevance: {metadata.get('relevance_breakdown', {}).get('high_relevance', 0)}")
+        typer.echo(f"Medium Relevance: {metadata.get('relevance_breakdown', {}).get('medium_relevance', 0)}")
+        typer.echo(f"Low Relevance: {metadata.get('relevance_breakdown', {}).get('low_relevance', 0)}")
+        
+        # Estatísticas
+        stats = metadata.get('statistics', {})
+        typer.echo(f"Average Score: {stats.get('average_score', 0)}")
+        typer.echo(f"High Relevance %: {stats.get('high_relevance_percentage', 0)}%")
+        
+        # Categorias
+        categories = metadata.get('categories', {})
+        if categories:
+            typer.echo("\nCategories:")
+            for category, count in categories.items():
+                typer.echo(f"  {category}: {count}")
+        
+        # Top keywords
+        top_keywords = metadata.get('top_keywords', [])
+        if top_keywords:
+            typer.echo("\nTop Keywords:")
+            for keyword, count in top_keywords[:5]:
+                typer.echo(f"  {keyword}: {count}")
+        
+        # Citações se disponíveis
+        if summary.citations:
+            citations = json.loads(summary.citations)
+            typer.echo(f"\nHigh-Relevance Citations: {len(citations)}")
+            for i, citation in enumerate(citations[:3], 1):
+                typer.echo(f"  {i}. Score: {citation.get('relevance_score', 0)} - {citation.get('category', 'unknown')}")
+                typer.echo(f"     Author: {citation.get('author', 'unknown')}")
+                typer.echo(f"     Preview: {citation.get('content_preview', '')[:100]}...")
+        
+    except Exception as e:
+        typer.echo(f"Error displaying metadata: {e}")
 
 if __name__ == "__main__":
     app()

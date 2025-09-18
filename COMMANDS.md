@@ -41,7 +41,7 @@ python src/main.py check-status --project "Taraxa"
 
 ### **5. Gerar Resumo com IA**
 ```bash
-# Terminal 2
+# Terminal 2 - Resumo com metadata e citações (sempre incluído)
 python src/main.py generate-summary --project "Taraxa" --days 7
 ```
 
@@ -77,11 +77,72 @@ python src/main.py check-status --project "NomeProjeto"
 # Estimar custo do processamento
 python src/main.py estimate-cost --project "NomeProjeto" --days 7
 
-# Gerar resumo com IA
+# Gerar resumo com IA (sempre inclui metadata e citações)
 python src/main.py generate-summary --project "NomeProjeto" --days 7
 
 # Salvar resumo em arquivo
 python src/main.py generate-summary --project "NomeProjeto" --days 7 --output "resumo.md"
+```
+
+---
+
+## 📊 **Sistema de Metadata e Citações**
+
+### **O que é o Sistema de Metadata?**
+O sistema **sempre gera metadata** que adiciona **rastreabilidade e análise de relevância** aos resumos:
+
+- **Scoring de Relevância**: Cada mensagem recebe um score de 0-100
+- **Categorização**: Mensagens são classificadas (announcement, development, community, spam)
+- **Citações**: Mensagens de alta relevância são citadas no resumo
+- **Estatísticas**: Breakdown detalhado da qualidade das mensagens
+
+### **Como Usar:**
+```bash
+# Resumo com metadata e citações (sempre incluído)
+python src/main.py generate-summary --project "Taraxa" --days 7
+```
+
+### **O que o Metadata Inclui:**
+- **Total de mensagens** analisadas
+- **Breakdown de relevância** (alta, média, baixa)
+- **Categorias** de mensagens
+- **Top keywords** encontradas
+- **Citações** das mensagens mais relevantes
+- **Estatísticas** de qualidade
+
+### **Exemplo de Output:**
+```
+==================================================
+ SUMMARY
+==================================================
+## Key Announcements
+- Staking program launch...
+- Partnership announcement...
+
+==================================================
+ METADATA
+==================================================
+Total Messages: 777
+High Relevance: 45
+Medium Relevance: 200
+Low Relevance: 532
+Average Score: 52.3
+High Relevance %: 5.8%
+
+Categories:
+  community: 650
+  announcement: 45
+  development: 82
+
+Top Keywords:
+  staking: 12
+  partnership: 8
+  governance: 6
+
+High-Relevance Citations: 20
+  1. Score: 95 - announcement
+     Author: @taraxa_official
+     Preview: We're excited to announce our new staking program...
 ```
 
 ---
